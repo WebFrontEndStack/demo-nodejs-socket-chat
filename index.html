@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      .chat{
+        height: 500px;
+        width: 400px;
+        margin: 0 auto;
+        border: 1px solid #000;
+      }
+      .header{
+        height: 50px;
+        width: 398px;
+        line-height: 50px;
+        text-align: center;
+        background-color: #0b8c7a;
+      }
+      .content{
+        height: 410px;
+        width: 398px;
+        background-color: rgba(38, 66, 38, 0.06);
+      }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      .footer{
+        height: 35px;
+        width: 398px;
+        background: #000;
+      }
+      form input { border: 0; padding: 10px; width:348px; margin-bottom: 5px;}
+      form button { width: 50px; background: rgb(130, 224, 255); border: none; padding: 10px; }
+
+    </style>
+  </head>
+  <body>
+    <div class="chat">
+      <div class="header">Socket.IO chat</div>
+      <div class="content">
+        <ul id="messages"></ul>
+      </div>
+      <div class="footer">
+        <form>
+          <input id="m" autocomplete="off" /><button>Send</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $('form').submit(function(){
+        socket.emit('message', $('#m').val());
+        $('#m').val('');
+        return false;
+      });
+      // 监听消息
+      socket.on('message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+      });
+
+      // 告诉服务器端有用户登录
+      socket.emit('login', {userid:this.userid, username:this.username});
+
+      // 监听新用户登录
+      socket.on('login', function(o){
+        // 更新用户数量，用户列表
+      });
+
+      // 监听用户退出
+      socket.on('logout', function(o){
+        // 更新用户数量，用户列表
+      });
+
+      function logout(){
+        socket.disconnect();
+        // location.reload();
+      }
+
+    </script>
+  </body>
+</html>
